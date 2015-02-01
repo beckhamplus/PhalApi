@@ -1,0 +1,10 @@
+
+.settings
+.settings/*
+.buildpath
+.project
+
+./Runtime
+./Runtime/*
+*.log
+
