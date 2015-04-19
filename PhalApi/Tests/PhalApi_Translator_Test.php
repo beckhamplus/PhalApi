@@ -63,4 +63,27 @@ class PhpUnderControl_PhalApiTranslator_Test extends PHPUnit_Framework_TestCase
         $this->assertEquals('{abc}', $rs);
     }
 
+    public function testAddMessage() 
+    {
+        PhalApi_Translator::setLanguage('zh_cn');
+        PhalApi_Translator::addMessage(dirname(__FILE__) . '/Data');
+
+        $this->assertEquals('this is a good way', PhalApi_Translator::get('test'));
+    }
+
+    public function testGetWithNoLanguageSet()
+    {
+        PhalApi_Translator_Mock::setLanguageNameSimple(null);
+
+        $rs = T('test');
+
+        PhalApi_Translator::setLanguage('zh_cn');
+    }
+}
+
+class PhalApi_Translator_Mock extends PhalApi_Translator {
+
+    public static function setLanguageNameSimple($lan) {
+        PhalApi_Translator::$message = null;
+    }
 }

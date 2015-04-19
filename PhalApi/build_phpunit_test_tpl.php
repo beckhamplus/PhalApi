@@ -13,7 +13,7 @@
  *
  * 备注：另可使用phpunit-skelgen进行骨架代码生成
  *
- * @author: dogstar 20150108
+ * @author: dogstar <chanzonghuang@gmail.com> 2015-01-08
  * @version: 4.0.0
  */
 
@@ -31,7 +31,7 @@ Demo:
 
 $filePath = $argv[1];
 $className = $argv[2];
-$bootstrap = isset($argv[3]) ? $argv[3] : null;
+$bootstrap = isset($argv[3]) ? $argv[3] : NULL;
 $author = isset($argv[4]) ? $argv[4] : 'dogstar';
 
 if (!empty($bootstrap)) {
@@ -133,8 +133,8 @@ foreach ($methods as $method) {
             $default = var_export($default, true);
         } else if (is_bool($default)) {
             $default = $default ? 'true' : 'false';
-        } else if ($default === null) {
-            $default = 'null';
+        } else if ($default === NULL) {
+            $default = 'NULL';
         } else {
             $default = "''";
         }

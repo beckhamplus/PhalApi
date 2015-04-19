@@ -1,21 +1,33 @@
 <?php
 /**
+ * PhalApi_Crypt_MultiMcrypt 多级mcrypt加密
  * 对底层的mcrypt进行简单的再封装，以便存储和保留类型
  *
- * @author: dogstar 2014-12-11
+ * - 依赖PhalApi_Crypt_Mcrypt进行加解密操作
+ * - 支持任何数据类型的加解密
+ * - 返回便于存储的字符串
+ *
+ * @package     PhalApi\Crypt
+ * @license     http://www.phalapi.net/license
+ * @link        http://www.phalapi.net/
+ * @author      dogstar <chanzonghuang@gmail.com> 2014-12-11
  */
 
-class PhalApi_Crypt_MultiMcrypt implements PhalApi_Crypt
-{
-    protected $mcrypt = null;
+class PhalApi_Crypt_MultiMcrypt implements PhalApi_Crypt {
 
-    public function __construct($iv)
-    {
+	/**
+	 * @var PhalApi_Crypt_Mcrypt $mcrypt
+	 */
+    protected $mcrypt = NULL;
+
+    public function __construct($iv) {
         $this->mcrypt = new PhalApi_Crypt_Mcrypt($iv);
     }
 
-    public function encrypt($data, $key)
-    {
+    /**
+     * @param mixed $data 待加密的数据
+     */
+    public function encrypt($data, $key) {
         $encryptData = serialize($data);
 
         $encryptData = $this->mcrypt->encrypt($encryptData, $key);
@@ -28,8 +40,7 @@ class PhalApi_Crypt_MultiMcrypt implements PhalApi_Crypt
     /**
      * 忽略不能正常反序列化的操作，并且在不能预期解密的情况下返回原文
      */
-    public function decrypt($data, $key)
-    {
+    public function decrypt($data, $key) {
         $decryptData = base64_decode($data);
 
         if ($decryptData === FALSE || $decryptData === '') {

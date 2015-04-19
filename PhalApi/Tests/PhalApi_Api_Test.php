@@ -34,7 +34,7 @@ class PhpUnderControl_PhalApiApi_Test extends PHPUnit_Framework_TestCase
     public function testInitialize()
     {
         DI()->request = new PhalApi_Request(array('service' => 'Default.Index'));
-        $rs = $this->coreApi->initialize();
+        $rs = $this->coreApi->init();
     }
 
 
@@ -44,7 +44,7 @@ class PhpUnderControl_PhalApiApi_Test extends PHPUnit_Framework_TestCase
         $data['service'] = 'Default.Index';
 
         DI()->request = new PhalApi_Request($data);
-        $rs = $this->coreApi->initialize();
+        $rs = $this->coreApi->init();
     }
 
     public function testInitializeWithRightSign()
@@ -53,7 +53,66 @@ class PhpUnderControl_PhalApiApi_Test extends PHPUnit_Framework_TestCase
         $data['service'] = 'Default.Index';
 
         DI()->request = new PhalApi_Request($data);
-        $rs = $this->coreApi->initialize();
+        $rs = $this->coreApi->init();
+
+    }
+
+    public function testSetterAndGetter()
+    {
+        $this->coreApi->username = 'phalapi';
+        $this->assertEquals('phalapi', $this->coreApi->username);
+    }
+
+    /**
+     * @expectedException PhalApi_Exception_InternalServerError
+     */
+    public function testGetUndefinedProperty()
+    {
+        $rs = $this->coreApi->noThisKey;
+    }
+
+    public function testApiImpl()
+    {
+        $data = array();
+        $data['service'] = 'Impl.Add';
+        $data['version'] = '1.1.0';
+        $data['left'] = '6';
+        $data['right'] = '1';
+
+        DI()->request = new PhalApi_Request($data);
+        DI()->filter = 'PhalApi_Filter_Impl';
+
+        $impl = new PhalApi_Api_Impl();
+        $impl->init();
+
+        $rs = $impl->add();
+        $this->assertEquals(7, $rs);
+    }
+}
+
+class PhalApi_Api_Impl extends PhalApi_Api {
+
+    public function getRules() {
+        return array(
+            '*' => array( 
+                'version' => array('name' => 'version'),
+            ),
+            'add' => array(
+                'left' => array('name' => 'left', 'type' => 'int'),
+                'right' => array('name' => 'right', 'type' => 'int'),
+            ),
+        );
+    }
+
+    public function add()
+    {
+        return $this->left + $this->right;
+    }
+}
+
+class PhalApi_Filter_Impl implements PhalApi_Filter {
+
+    public function check() {
 
     }
 }

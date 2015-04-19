@@ -21,7 +21,7 @@ class PhpUnderControl_PhalApiResponse_Test extends PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->coreResponse = new PhalApi_Response();
+        $this->coreResponse = new PhalApi_Response_Json_Mock();
     }
 
     protected function tearDown()
@@ -68,6 +68,17 @@ class PhpUnderControl_PhalApiResponse_Test extends PHPUnit_Framework_TestCase
         $content = 'text/html;charset=utf-8';
 
         $rs = $this->coreResponse->addHeaders($key, $content);
+    }
+
+    public function testGetHeaders()
+    {
+        $key = 'Version';
+        $content = '1.1.2';
+
+        $rs = $this->coreResponse->addHeaders($key, $content);
+
+        $this->assertEquals($content, $this->coreResponse->getHeaders($key));
+        $this->assertTrue(is_array($this->coreResponse->getHeaders()));
     }
 
     /**

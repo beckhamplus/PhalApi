@@ -23,51 +23,7 @@ class PhpUnderControl_PhalApiDBNotORM_Test extends PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $config = array(
-            /**
-             * avaiable db servers
-             */
-            'servers' => array(
-                'DB_A' => array(
-                    'host'      => '192.168.0.1',           //数据库域名
-                    'name'      => 'test',                  //数据库名字
-                    'user'      => 'root',                  //数据库用户名
-                    'password'  => '123456',                //数据库密码
-                    'port'      => '3306',                  //数据库端口
-                ),
-                'DB_DEMO' => array(
-                    'host'      => '192.168.0.2',           //数据库域名
-                    'name'      => 'test',                  //数据库名字
-                    'user'      => 'root',                  //数据库用户名
-                    'password'  => '123456',                //数据库密码
-                    'port'      => '3306',                  //数据库端口
-                ),
-            ),
-
-            /**
-             * custom table map
-             */
-            'tables' => array(
-                '__default__' => array(
-                    'prefix' => 'weili_',
-                    'key' => 'id',
-                    'map' => array(
-                        array('db' => 'DB_A'),
-                    ),
-                ),
-                'demo' => array(
-                    'prefix' => 'weili_',
-                    'key' => 'id',
-                    'map' => array(
-                        array('db' => 'DB_A'),
-                        array('start' => 0, 'end' => 2, 'db' => 'DB_A'),
-                        array('start' => 3, 'end' => 5, 'db' => 'DB_DEMO'),
-                    ),
-                ),
-            ),
-        );
-
-        $this->coreDBNotORM = new PhalApi_DB_NotORM($config);
+        $this->coreDBNotORM = new PhalApi_DB_NotORM(DI()->config->get('dbs'));
         $this->coreDBNotORM->debug = true;
     }
 
@@ -118,5 +74,11 @@ class PhpUnderControl_PhalApiDBNotORM_Test extends PHPUnit_Framework_TestCase
     {
         $rs = $this->coreDBNotORM->demo_10->fetchAll();
         $this->assertNotEmpty($rs);
+    }
+
+    public function testMultiSet()
+    {
+        $this->coreDBNotORM->debug = true;
+        $this->coreDBNotORM->debug = false;
     }
 }
